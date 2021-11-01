@@ -1,1 +1,1 @@
-# xbox-games-deals
+# xbox-games-api
