@@ -1,0 +1,31 @@
+{
+  "name": "xbox-games-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon dev/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pazguille/xbox-games-api.git"
+  },
+  "author": "Guille Paz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pazguille/xbox-games-api/issues"
+  },
+  "homepage": "https://github.com/pazguille/wxbox-games-api#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "cheerio": "^1.0.0-rc.10",
+    "joi": "^17.4.1"
+  },
+  "devDependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
+  },
+  "engines": {
+    "node": ">=14.x"
+  }
+}
