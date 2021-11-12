@@ -8,6 +8,7 @@ const lists = {
   deals: 'Deal',
   coming: 'ComingSoon',
   best: 'BestRated',
+  free: 'TopFree',
 };
 
 function fetchListFromMS(list, skipitems = 0) {

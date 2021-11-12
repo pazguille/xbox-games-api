@@ -1,5 +1,6 @@
 const express = require('express');
-const xboxGames = require('../api/xbox-games');
+const games = require('../api/games');
+const search = require('../api/search');
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
-app.get('/api/xbox-games', xboxGames);
+app.get('/api/games', games);
+app.get('/api/search', search);
 
 module.exports = app;
