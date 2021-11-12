@@ -3,7 +3,7 @@ const fetchGamesList = require('../utils/fetch-games-list');
 const fetchGamesDetail = require('../utils/fetch-games-detail');
 
 const schema = Joi.object({
-  list: Joi.string().valid('new', 'deals', 'coming', 'best'),
+  list: Joi.string().valid('new', 'deals', 'coming', 'best', 'free'),
   skipitems: Joi.number().default(0),
   id: Joi.string(),
 }).or('list', 'id');

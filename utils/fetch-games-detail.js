@@ -20,25 +20,29 @@ function groupBy(xs, key) {
 };
 
 async function fetchGamesDetail(ids) {
-  const gamesResponse = await fetchDetailFromMS(
-    Array.isArray(ids) ? ids : [ids]
-  );
-  const games = gamesResponse.map(game => ({
-    id: game.ProductId,
-    title: game.LocalizedProperties[0].ProductTitle,
-    developer: game.LocalizedProperties[0].DeveloperName,
-    publisher: game.LocalizedProperties[0].PublisherName,
-    price: {
-      amount: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP,
-      deal: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice,
-    },
-    description: game.LocalizedProperties[0].ProductDescription,
-    images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-    // videos: game.LocalizedProperties[0].Videos.map(video => ({ url: video.Uri, width: video.Width, height: video.Height, poster: `https:${video.PreviewImage.Uri}` })),
-    release_date: game.MarketProperties[0].OriginalReleaseDate,
-    related: game.MarketProperties[0].RelatedProducts,
-  }));
-  return games;
+  try {
+    const gamesResponse = await fetchDetailFromMS(
+      Array.isArray(ids) ? ids : [ids]
+    );
+    const games = gamesResponse.map(game => ({
+      id: game.ProductId,
+      title: game.LocalizedProperties[0].ProductTitle,
+      developer: game.LocalizedProperties[0].DeveloperName,
+      publisher: game.LocalizedProperties[0].PublisherName,
+      price: {
+        amount: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP,
+        deal: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice,
+      },
+      description: game.LocalizedProperties[0].ProductDescription,
+      images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
+      // videos: game.LocalizedProperties[0].Videos.map(video => ({ url: video.Uri, width: video.Width, height: video.Height, poster: `https:${video.PreviewImage.Uri}` })),
+      release_date: game.MarketProperties[0].OriginalReleaseDate,
+      related: game.MarketProperties[0].RelatedProducts,
+    }));
+    return games;
+  } catch (err) {
+    return err;
+  }
 };
 
 module.exports = fetchGamesDetail;
