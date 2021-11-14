@@ -29,6 +29,7 @@ async function fetchGamesDetail(ids) {
       title: game.LocalizedProperties[0].ProductTitle,
       developer: game.LocalizedProperties[0].DeveloperName,
       publisher: game.LocalizedProperties[0].PublisherName,
+      game_pass: game.LocalizedProperties[0].EligibilityProperties.Affirmations.find(a => a.AffirmationId === '9WNZS2ZC9L74') ? true : false,
       price: {
         amount: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP,
         deal: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice,
