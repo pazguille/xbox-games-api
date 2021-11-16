@@ -1,7 +1,11 @@
 const axios = require('axios');
 
-function fetchDetailFromMS(ids) {
-  return axios.get(`https://displaycatalog.mp.microsoft.com/v7.0/products?market=AR&languages=es-ar&bigIds=${ids.join(',')}`)
+function fetchDetailFromMS(ids, store, lang) {
+  return axios.get('https://displaycatalog.mp.microsoft.com/v7.0/products', { params: {
+    market: store,
+    languages: lang,
+    bigIds: ids.join(','),
+  }})
   .then(response => response.data.Products)
   .catch(err => { throw { error: err.response.data.error }; });
 };
@@ -19,10 +23,12 @@ function groupBy(xs, key) {
   return group;
 };
 
-async function fetchGamesDetail(ids) {
+async function fetchGamesDetail(ids, store, lang) {
   try {
     const gamesResponse = await fetchDetailFromMS(
-      Array.isArray(ids) ? ids : [ids]
+      Array.isArray(ids) ? ids : [ids],
+      store,
+      lang
     );
     const games = gamesResponse.map(game => ({
       id: game.ProductId,

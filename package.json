@@ -19,7 +19,8 @@
   "dependencies": {
     "axios": "^0.24.0",
     "cheerio": "^1.0.0-rc.10",
-    "joi": "^17.4.1"
+    "joi": "^17.4.1",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "express": "^4.17.1",
