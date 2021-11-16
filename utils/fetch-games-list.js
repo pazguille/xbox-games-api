@@ -11,11 +11,11 @@ const lists = {
   free: 'TopFree',
 };
 
-function fetchListFromMS(list, skipitems = 0) {
+function fetchListFromMS(list, skipitems, store, lang) {
   return axios.get(`${API_URL}/${lists[list]}`, { params: {
-    Market: 'ar',
-    Language: 'es',
-    ItemTypes: 'Game',
+    market: store,
+    language: lang,
+    itemTypes: 'Game',
     deviceFamily: 'Windows.Xbox',
     count: LIMIT,
     skipitems,
@@ -24,13 +24,13 @@ function fetchListFromMS(list, skipitems = 0) {
   .catch(err => { throw { error: err.response.data.error }; });
 };
 
-async function fetchGamesList(list, skipitems) {
-  const result = await fetchListFromMS(list, skipitems);
+async function fetchGamesList(list, skipitems, store, lang) {
+  const result = await fetchListFromMS(list, skipitems, store, lang);
   if (result.length < 0) {
     return [];
   }
   const gamesIds = result.map(item => item.Id);
-  const games = await fetchGamesDetail(gamesIds);
+  const games = await fetchGamesDetail(gamesIds, store, lang);
   return games;
 };
 
