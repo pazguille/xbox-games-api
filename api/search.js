@@ -2,6 +2,8 @@ const Joi = require('joi');
 const fetchSearchGames = require('../utils/fetch-search-games');
 const schema = Joi.object({
   q: Joi.string().required(),
+  lang: Joi.string().default('es'),
+  store: Joi.string().default('ar'),
 });
 
 module.exports = async (req, res) => {
@@ -16,7 +18,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const results = await fetchSearchGames(query.q);
+    const results = await fetchSearchGames(query.q, query.store, query.lang);
     return res.status(200).json(results);
   } catch {
     return res.status(200).json({});

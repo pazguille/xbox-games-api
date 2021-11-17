@@ -1,12 +1,11 @@
 const axios = require('axios');
-
 const fetchGamesDetail = require('./fetch-games-detail');
 
 const API_URL = 'https://www.microsoft.com/services/api/v3/suggest';
 
-function fetchSearchGames(query) {
+function fetchSearchGames(query, store, lang) {
   return axios.get(`${API_URL}`, { params: {
-    market: 'es-ar',
+    market: `${lang}-${store}`,
     clientId: '7F27B536-CF6B-4C65-8638-A0F8CBDFCA65',
     sources: 'DCatAll-Products',
     counts: '10,0,0',
@@ -19,7 +18,7 @@ function fetchSearchGames(query) {
       .filter((result) => result.Source === 'Games')
       .map((result) => result.Metas[0].Value);
   })
-  .then((games) => fetchGamesDetail(games))
+  .then((games) => fetchGamesDetail(games, store, lang))
   .catch(err => { throw { error: err }; });
 };
 
