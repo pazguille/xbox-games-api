@@ -48,7 +48,6 @@ async function fetchGamesDetail(ids, store, lang) {
     }));
     return games;
   } catch (err) {
-    console.error(err);
     return err;
   }
 };
