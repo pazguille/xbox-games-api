@@ -27,7 +27,7 @@ function fetchListFromMS(list, count, skipitems, store, lang) {
 
 async function fetchGamesList(list, count, skipitems, store, lang) {
   const result = await fetchListFromMS(list, count, skipitems, store, lang);
-  if (result.length < 0) {
+  if (result.length === 0) {
     return [];
   }
   const gamesIds = result.map(item => item.Id);
