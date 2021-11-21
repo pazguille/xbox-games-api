@@ -40,10 +40,10 @@ async function fetchGamesDetail(ids, store, lang) {
       price: {
         amount: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP,
         deal: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice,
+        ends: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP !== game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice ? game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.EndDate : undefined,
       },
       description: game.LocalizedProperties[0].ProductDescription,
       images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-      // videos: game.LocalizedProperties[0].Videos.map(video => ({ url: video.Uri, width: video.Width, height: video.Height, poster: `https:${video.PreviewImage.Uri}` })),
       release_date: game.MarketProperties[0].OriginalReleaseDate,
       related: game.MarketProperties[0].RelatedProducts,
     }));
