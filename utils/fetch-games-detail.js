@@ -37,6 +37,7 @@ async function fetchGamesDetail(ids, store, lang) {
       publisher: game.LocalizedProperties[0].PublisherName,
       ea_play: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === 'B0HFJ7PW900M') ? true : false,
       game_pass: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === '9WNZS2ZC9L74') ? true : false,
+      demo: game.Properties.IsDemo ? true : false,
       price: {
         amount: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP,
         deal: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice,
@@ -45,7 +46,7 @@ async function fetchGamesDetail(ids, store, lang) {
       description: game.LocalizedProperties[0].ProductDescription,
       images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
       release_date: game.MarketProperties[0].OriginalReleaseDate,
-      related: game.MarketProperties[0].RelatedProducts,
+      related: game.MarketProperties[0].RelatedProducts.map(r => ({ id: r.RelatedProductId, type: r.RelationshipType })),
     }));
     return games;
   } catch (err) {
