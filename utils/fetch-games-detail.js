@@ -31,25 +31,6 @@ async function fetchGamesDetail(ids, store, lang) {
       lang
     );
 
-    // const games = gamesResponse.map(game => ({
-    //   id: game.ProductId,
-    //   title: game.LocalizedProperties[0].ProductTitle,
-    //   developer: game.LocalizedProperties[0].DeveloperName,
-    //   publisher: game.LocalizedProperties[0].PublisherName,
-    //   ea_play: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === 'B0HFJ7PW900M') ? true : false,
-    //   game_pass: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === '9WNZS2ZC9L74') ? true : false,
-    //   demo: game.Properties.IsDemo ? true : false,
-    //   price: {
-    //     amount: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP,
-    //     deal: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice,
-    //     ends: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP !== game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice ? game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.EndDate : undefined,
-    //   },
-    //   description: game.LocalizedProperties[0].ProductDescription,
-    //   images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-    //   release_date: game.MarketProperties[0].OriginalReleaseDate,
-    //   related: game.MarketProperties[0].RelatedProducts.map(r => ({ id: r.RelatedProductId, type: r.RelationshipType })),
-    // }));
-
     const games = gamesResponse.map(game => {
       const g = {
         id: game.ProductId,
@@ -78,7 +59,6 @@ async function fetchGamesDetail(ids, store, lang) {
         g.price.gold_off = Math.round((g.price.amount - game.DisplaySkuAvailabilities[0].Availabilities[1].OrderManagementData.Price.ListPrice)*100/g.price.amount);
         g.price.gold_ends = game.DisplaySkuAvailabilities[0].Availabilities[1].Conditions.EndDate;
       }
-
       return g;
     });
 
