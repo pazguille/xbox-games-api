@@ -1,30 +1,40 @@
 const axios = require('axios');
 
+const API_URI = 'https://api.rawg.io/api/games';
+const API_KEY = 'c542e67aec3a4340908f9de9e86038af';
+
+function getGame(game) {
+  return axios.get(`${API_URI}/${game}`, { params: {
+    key: API_KEY,
+  }})
+  .then(response => response.data);
+}
+
+function getYoutube(game) {
+  return axios.get(`${API_URI}/${game}/youtube`, { params: {
+    key: API_KEY,
+  }})
+  .then(response => response.data);
+}
+
 module.exports = async (req, res) => {
   try {
-    const game = await axios.get(`https://rawg.io/api/games/${req.query.game}`, { params: {
-      key: 'c542e67aec3a4340908f9de9e86038af',
-    }})
-    .then(response => response.data)
-    .catch(err => { throw { error: err.response.data.error }; });
+    const results = await Promise.all([getGame(req.query.game), getYoutube(req.query.game)]);
+    const game = results[0];
+    const youtube = results[1];
+
+    const metacritic = game.metacritic_platforms.find(
+      critic => ['xbox-series-x', 'xbox-one'].includes(critic.platform.slug)
+    );
 
     return res.status(200).json({
-      // clip: game.clip.clip,
-      full: game.clip.clips.full,
-      // youtube: game.clip.video,
+      full: game.clip?.clips.full,
+      playlist: youtube?.results.map((video) => video.external_id),
+      metacritic: {
+        url: metacritic?.url,
+        score: metacritic?.metascore,
+      },
     });
-
-    // axios.get(game.clip.clips.full,{
-    //   responseType: 'stream',
-    //   decompress: false,
-    // })
-    // .then(response => {
-    //   res.header(response.headers);
-    //   response.data.pipe(res);
-    //   // res.header('content-type', response.headers['content-type']);
-    //   // res.header('content-disposition', response.headers['content-disposition']);
-    // });
-
   } catch(err) {
     return res.status(200).json({});
   }
