@@ -15,6 +15,8 @@ module.exports = async (req, res) => {
       description: n.description[0],
       link: n.link[0],
     }));
+
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=86400, stale-while-revalidate');
     return res.status(200).json(news);
   } catch {
     return res.status(200).json({});

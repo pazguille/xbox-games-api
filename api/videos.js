@@ -27,6 +27,8 @@ module.exports = async (req, res) => {
       critic => ['xbox-series-x', 'xbox-one'].includes(critic.platform.slug)
     );
 
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=86400, stale-while-revalidate');
+
     return res.status(200).json({
       full: game.clip?.clips.full,
       playlist: youtube?.results.map((video) => video.external_id),
