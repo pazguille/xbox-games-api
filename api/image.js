@@ -9,11 +9,9 @@ module.exports = async (req, res) => {
   const queryString = new URLSearchParams(req.query).toString();
   const microsoft = `https://store-images.s-microsoft.com/image/${path}?${queryString}`;
   const response = await axios.get(microsoft, { responseType: 'arraybuffer' });
-  res.setHeader('content-type', response.headers['content-type']);
-  res.setHeader('content-length', response.headers['content-length']);
-  res.setHeader('content-modified', response.headers['last-modified']);
-  res.setHeader('etag', response.headers.etag);
-  res.setHeader('date', response.headers.date);
-  res.setHeader('cache-control', 'public, immutable, max-age=31536000');
-  return res.status(200).send(response.data);
+  res.setHeader('Content-Type', response.headers['content-type']);
+  res.setHeader('Content-Length', response.headers['content-length']);
+
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  return res.status(200).send(response.data);inm
 };
