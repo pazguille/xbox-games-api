@@ -13,5 +13,6 @@ module.exports = async (req, res) => {
   res.setHeader('Content-Length', response.headers['content-length']);
 
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  // res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=31536000, stale-while-revalidate');
   return res.status(200).send(response.data);inm
 };
