@@ -50,7 +50,7 @@ async function fetchGamesDetail(ids, store, lang) {
           ends: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP !== game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice ? game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.EndDate : undefined,
         },
         description: game.LocalizedProperties[0].ProductDescription,
-        images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
+        images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
         // related: game.MarketProperties[0].RelatedProducts.map(r => ({ id: r.RelatedProductId, type: r.RelationshipType })),
       };
 
