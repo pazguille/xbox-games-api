@@ -4,8 +4,7 @@ const axios = require('axios');
 // https://api.xstoregames.com/api/image/apps.2792.14572882104595488.f6337262-80e0-4705-aa02-3f9593b0fbd3.10050035-de9c-43b7-ae6e-83930c9ace2c?w=630
 
 module.exports = async (req, res) => {
-  const url = req.url.replace('/api', '');
-  const microsoft = `https://store-images.s-microsoft.com/${url}`;
+  const microsoft = `https://store-images.s-microsoft.com/image/${req.query.path}`;
   const response = await axios.get(microsoft, { responseType: 'arraybuffer' });
   res.setHeader('content-type', response.headers['content-type']);
   res.setHeader('content-length', response.headers['content-length']);
