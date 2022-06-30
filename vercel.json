@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/api/image/:path*",
+      "destination": "/api/image"
+    }
+  ],
   "headers": [
     {
       "source": "/api/:path*",
