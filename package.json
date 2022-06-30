@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "vercel": "vercel dev --listen 3031",
     "dev": "nodemon dev/server.js"
   },
   "repository": {
