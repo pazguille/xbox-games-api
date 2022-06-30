@@ -22,6 +22,8 @@ module.exports = async (req, res) => {
     })));
   }
 
+  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=1, stale-while-revalidate');
+
   if (query.list) {
     const results = await fetchGamesList(query.list, query.count, query.skipitems, query.store, query.lang);
     return res.status(results.code || 200).json(results);
