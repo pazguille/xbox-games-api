@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fetchGamesDetail = require('./fetch-games-detail');
 
-const API_URL = 'https://www.microsoft.com/services/api/v3/suggest';
+const API_URL = 'https://www.microsoft.com/msstoreapiprod/api/autosuggest';
 
 function fetchSearchGames(query, store, lang) {
   return axios.get(`${API_URL}`, { params: {
