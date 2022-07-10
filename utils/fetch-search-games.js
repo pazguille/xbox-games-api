@@ -8,7 +8,8 @@ function fetchSearchGames(query, store, lang) {
     market: `${lang}-${store}`,
     clientId: '7F27B536-CF6B-4C65-8638-A0F8CBDFCA65',
     sources: 'DCatAll-Products',
-    counts: '10,0,0',
+    filter: '+ClientType:StoreWeb',
+    counts: '5,0,0',
     query,
   }})
   .then(response => response.data.ResultSets[0])
