@@ -20,6 +20,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "joi": "^17.4.1",
+    "sharp": "^0.31.0",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {

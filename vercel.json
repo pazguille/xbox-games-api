@@ -3,6 +3,10 @@
     {
       "source": "/api/image/:path*",
       "destination": "/api/image"
+    },
+    {
+      "source": "/api/webp/:path*",
+      "destination": "/api/webp"
     }
   ],
   "headers": [
