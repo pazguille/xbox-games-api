@@ -11,11 +11,13 @@ module.exports = async (req, res) => {
   const microsoft = `https://store-images.s-microsoft.com/image/${path}?${queryString}`;
   const response = await axios.get(microsoft, { responseType: 'arraybuffer' });
 
+  const format = req.headers.accept.includes('image/webp') ? 'webp' : 'jpeg';
+
   const data = await sharp(response.data)
-    .webp({ quality: 80 })
+    [format]({ quality: 80 })
     .toBuffer();
 
-  res.setHeader('Content-Type', 'image/webp');
+  res.setHeader('Content-Type', `image/${format}`);
   res.setHeader('Content-Length', data.length);
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 
