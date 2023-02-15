@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
     return res.status(200).json([]);
   }
 
-  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=1, stale-while-revalidate');
+  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=7200, stale-while-revalidate');
 
   const games = await fetchGamesDetail(gamesIds, query.store, query.lang);
   return res.status(200).json(games);
