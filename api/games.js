@@ -1,15 +1,17 @@
 const Joi = require('joi');
 const fetchGamesList = require('../utils/fetch-games-list');
 const fetchGamesDetail = require('../utils/fetch-games-detail');
+const fetchGamesRelated = require('../utils/fetch-games-related');
 
 const schema = Joi.object({
-  list: Joi.string().valid('new', 'deals', 'coming', 'best', 'free', 'most', 'gold-free', 'gold-new', 'gold-deals'),
+  list: Joi.string().valid('new', 'deals', 'coming', 'best', 'most', 'free', 'gp-deals'),
   id: Joi.string(),
+  related: Joi.string(),
   skipitems: Joi.number().default(0),
   count: Joi.number().default(10),
   lang: Joi.string().default('es'),
   store: Joi.string().default('ar'),
-}).or('list', 'id');
+}).or('list', 'id', 'related');
 
 module.exports = async (req, res) => {
   const { value: query, error } = schema.validate(req.query);
@@ -23,6 +25,11 @@ module.exports = async (req, res) => {
   }
 
   res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=7200, stale-while-revalidate');
+
+  if (query.related) {
+    const results = await fetchGamesRelated(query.related, query.store, query.lang);
+    return res.status(results.code || 200).json(results);
+  }
 
   if (query.list) {
     const results = await fetchGamesList(query.list, query.count, query.skipitems, query.store, query.lang);

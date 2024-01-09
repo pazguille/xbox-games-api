@@ -34,10 +34,13 @@ async function fetchGamesDetail(ids, store, lang) {
 
     const games = gamesResponse.map(game => {
       const g = {
+        // full: game,
         id: game.ProductId,
         title: game.LocalizedProperties[0].ProductTitle,
         developer: game.LocalizedProperties[0].DeveloperName,
         publisher: game.LocalizedProperties[0].PublisherName,
+        category: game.Properties.Category,
+        platforms: game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.ClientConditions.AllowedPlatforms.map(g => g.PlatformName),
         release_date: game.MarketProperties[0].OriginalReleaseDate,
         ea_play: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === 'B0HFJ7PW900M') ? true : false,
         game_pass: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === '9WNZS2ZC9L74') ? true : false,
@@ -51,10 +54,8 @@ async function fetchGamesDetail(ids, store, lang) {
           ends: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP !== game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice ? game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.EndDate : undefined,
         },
         description: game.LocalizedProperties[0].ProductDescription,
-        // images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-        // Use vercel domain to Edge Caching
-        images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'xbox-games-api.vercel.app/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-        // related: game.MarketProperties[0].RelatedProducts.map(r => ({ id: r.RelatedProductId, type: r.RelationshipType })),
+        images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
+        videos: groupBy(game.LocalizedProperties[0].Videos.map(vid => ({ url: vid.Uri.replace('http:', 'https:'), poster: `https:${vid.PreviewImage.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: vid.Width, height: vid.Height, type: vid.VideoPurpose.toLowerCase() })), 'type'),
       };
 
       if (g.gold_deal) {
@@ -62,12 +63,20 @@ async function fetchGamesDetail(ids, store, lang) {
         g.price.gold_off = Math.round((g.price.amount - game.DisplaySkuAvailabilities[0].Availabilities[1].OrderManagementData.Price.ListPrice)*100/g.price.amount);
         g.price.gold_ends = game.DisplaySkuAvailabilities[0].Availabilities[1].Conditions.EndDate;
       }
+
+      if (g.ea_play) {
+        g.price.ea_deal = game.DisplaySkuAvailabilities[0]?.Availabilities[1]?.OrderManagementData.Price.ListPrice;
+        g.price.ea_off = g.price.ea_deal ? Math.round((g.price.amount - game.DisplaySkuAvailabilities[0].Availabilities[1].OrderManagementData.Price.ListPrice)*100/g.price.amount) : undefined;
+        g.price.ea_ends = g.price.ea_deal ? game.DisplaySkuAvailabilities[0].Availabilities[1].Conditions.EndDate : undefined;
+      }
+
       return g;
     });
 
     return games;
 
   } catch (err) {
+    console.log(err);
     return err;
   }
 };
