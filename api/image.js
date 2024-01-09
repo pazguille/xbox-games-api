@@ -5,7 +5,7 @@ const sharp = require('sharp');
 // https://xbox-games-api.vercel.app/api/image/apps.3458.14519454624678828.1302cdcc-5bca-4ad4-9d5f-5610ae87cd80.0060eafa-b18a-4e2e-b30b-17de3326c7f1
 
 module.exports = async (req, res) => {
-  const path = req.query.path;
+  const path = req.params.path || req.query.path;
   delete req.query.path;
   const queryString = new URLSearchParams(req.query).toString();
   const microsoft = `https://store-images.s-microsoft.com/image/${path}?${queryString}`;

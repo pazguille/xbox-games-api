@@ -1,21 +1,16 @@
-const axios = require('axios');
 const Joi = require('joi');
-const fetchGamesDetail = require('../utils/fetch-games-detail');
+const fetchGamePassList = require('../utils/fetch-gamepass-list');
 
 const schema = Joi.object({
-  list: Joi.string().valid('new', 'coming', 'leaving', 'all').required(),
+  list: Joi.string().valid(
+    'new', 'coming', 'leaving', 'all', 'ea', 'ubisoft',
+    'new-pc', 'coming-pc', 'leaving-pc', 'all-pc', 'ea-pc', 'ubisoft-pc',  'riot-pc'
+  ).required(),
+  skipitems: Joi.number().default(0),
+  count: Joi.number().default(10),
   lang: Joi.string().default('es'),
   store: Joi.string().default('ar'),
 });
-
-const API_URL = 'https://catalog.gamepass.com/sigls/v2';
-
-const lists = {
-  new: 'f13cf6b4-57e6-4459-89df-6aec18cf0538',
-  coming: '095bda36-f5cd-43f2-9ee1-0a72f371fb96',
-  leaving: '393f05bf-e596-4ef6-9487-6d4fa0eab987',
-  all: 'f6f1f99f-9b49-4ccd-b3bf-4d9767a77f5e',
-};
 
 module.exports = async (req, res) => {
   const { value: query, error } = schema.validate(req.query);
@@ -28,23 +23,8 @@ module.exports = async (req, res) => {
     })));
   }
 
-  const gamesIds = await axios.get(API_URL, { params: {
-    id: lists[query.list],
-    market: query.store,
-    language: query.lang,
-  }})
-  .then(response => {
-    response.data.shift();
-    return response.data.map(item => item.id);
-  })
-  .catch(err => { throw { error: err.response.data.error }; });
-
-  if (gamesIds.length < 0) {
-    return res.status(200).json([]);
-  }
-
   res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=7200, stale-while-revalidate');
 
-  const games = await fetchGamesDetail(gamesIds, query.store, query.lang);
-  return res.status(200).json(games);
+  const results = await fetchGamePassList(query.list, query.count, query.skipitems, query.store, query.lang);
+  return res.status(results.code || 200).json(results);
 }

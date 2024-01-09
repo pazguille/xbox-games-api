@@ -5,6 +5,7 @@ const search = require('../api/search');
 const news = require('../api/news');
 const videos = require('../api/videos');
 const image = require('../api/image');
+const cron = require('../api/cron');
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.get('/api/search', search);
 app.get('/api/news', news);
 app.get('/api/videos', videos);
 app.get('/api/image(/:path*)?', image);
+app.get('/api/cron', cron);
 
 module.exports = app;

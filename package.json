@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "vercel": "vercel dev --listen 3031",
-    "dev": "nodemon dev/server.js"
+    "dev": "nodemon dev/server.js",
+    "start": "NODE_ENV=production PORT=8080 node ./index.js"
   },
   "repository": {
     "type": "git",
@@ -18,16 +19,21 @@
   },
   "homepage": "https://github.com/pazguille/wxbox-games-api#readme",
   "dependencies": {
-    "axios": "^0.24.0",
-    "joi": "^17.4.1",
-    "sharp": "^0.31.0",
-    "xml2js": "^0.4.23"
+    "axios": "^1.4.0",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "hpp": "^0.2.3",
+    "joi": "^17.9.2",
+    "mongodb": "^6.3.0",
+    "sharp": "^0.33.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "express": "^4.17.1",
-    "nodemon": "^2.0.12"
+    "@flydotio/dockerfile": "^0.5.0",
+    "nodemon": "^3.0.2"
   },
   "engines": {
-    "node": ">=14.x"
+    "node": ">=20.x"
   }
 }
