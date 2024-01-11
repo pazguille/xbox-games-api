@@ -24,6 +24,13 @@ function groupBy(xs, key) {
   return group;
 };
 
+const allowedPlatformsNames = {
+  'Windows.Desktop': 'PC',
+  'Windows.Xbox': 'Xbox',
+  'ConsoleGen8': 'Xbox One',
+  'ConsoleGen9': 'Xbox Series X|S',
+};
+
 async function fetchGamesDetail(ids, store, lang) {
   try {
     const gamesResponse = await fetchDetailFromMS(
@@ -33,6 +40,15 @@ async function fetchGamesDetail(ids, store, lang) {
     );
 
     const games = gamesResponse.map(game => {
+      const genCompatible = game.Properties.XboxConsoleGenCompatible?.map(g => allowedPlatformsNames[g]) || [];
+      const allowedPlatforms = game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.ClientConditions.AllowedPlatforms
+        .map(g => g.PlatformName).reduce((a, b) => {
+          if (b.includes('Desktop')) {
+            a.push(allowedPlatformsNames[b]);
+          }
+          return a;
+        }, []);
+
       const g = {
         // full: game,
         id: game.ProductId,
@@ -40,7 +56,7 @@ async function fetchGamesDetail(ids, store, lang) {
         developer: game.LocalizedProperties[0].DeveloperName,
         publisher: game.LocalizedProperties[0].PublisherName,
         category: game.Properties.Category,
-        platforms: game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.ClientConditions.AllowedPlatforms.map(g => g.PlatformName),
+        platforms: [...genCompatible, ...allowedPlatforms],
         release_date: game.MarketProperties[0].OriginalReleaseDate,
         ea_play: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === 'B0HFJ7PW900M') ? true : false,
         game_pass: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === '9WNZS2ZC9L74') ? true : false,
