@@ -24,6 +24,12 @@ function groupBy(xs, key) {
   return group;
 };
 
+function bytesToSize(bytes) {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  return `${(bytes / (1024 ** i)).toFixed(2)} ${sizes[i]}`;
+};
+
 const allowedPlatformsNames = {
   'Windows.Desktop': 'PC',
   'Windows.Xbox': 'Xbox',
@@ -49,6 +55,31 @@ async function fetchGamesDetail(ids, store, lang) {
           return a;
         }, []);
 
+      const coop = game.Properties.Attributes?.reduce((a, b) => {
+        if (['XblLocalCoop', 'XblOnlineCoop'].includes(b.Name)) {
+          a.push({
+            name: b.Name.toLowerCase().replace(/(xbl)|(coop)/g, ''),
+            min: b.Minimum || undefined,
+            max: b.Maximum || undefined
+          });
+        }
+        return a;
+      }, []) || [];
+
+      const multi = game.Properties.Attributes?.reduce((a, b) => {
+        if (['XblLocalMultiPlayer', 'XblOnlineMultiPlayer'].includes(b.Name)) {
+          a.push({
+            name: b.Name.toLowerCase().replace(/(xbl)|(multiplayer)/g, ''),
+            min: b.Minimum || undefined,
+            max: b.Maximum || undefined
+          });
+        }
+        return a;
+      }, []) || [];
+
+      const size = game.DisplaySkuAvailabilities[0].Sku.Properties.Packages?.length > 0 && game.DisplaySkuAvailabilities[0].Sku.Properties.Packages !== null
+        ? bytesToSize(game.DisplaySkuAvailabilities[0].Sku.Properties.Packages[0]?.MaxDownloadSizeInBytes)
+        : undefined;
       const g = {
         // full: game,
         id: game.ProductId,
@@ -57,7 +88,11 @@ async function fetchGamesDetail(ids, store, lang) {
         publisher: game.LocalizedProperties[0].PublisherName,
         category: game.Properties.Category,
         platforms: [...genCompatible, ...allowedPlatforms],
+        coop,
+        multi,
+        size,
         release_date: game.MarketProperties[0].OriginalReleaseDate,
+        averageRating: game.MarketProperties[0].UsageData[2].AverageRating,
         ea_play: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === 'B0HFJ7PW900M') ? true : false,
         game_pass: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === '9WNZS2ZC9L74') ? true : false,
         gold_deal: game.LocalizedProperties[0]?.EligibilityProperties?.Affirmations.find(a => a.AffirmationId === '9RVBF5P99P15') ? true : false,
@@ -71,7 +106,7 @@ async function fetchGamesDetail(ids, store, lang) {
         },
         description: game.LocalizedProperties[0].ProductDescription,
         images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-        videos: groupBy(game.LocalizedProperties[0].Videos.map(vid => ({ url: vid.Uri.replace('http:', 'https:'), poster: `https:${vid.PreviewImage.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: vid.Width, height: vid.Height, type: vid.VideoPurpose.toLowerCase() })), 'type'),
+        videos: game.LocalizedProperties[0].Videos ? groupBy(game.LocalizedProperties[0].Videos.map(vid => ({ url: vid.Uri.replace('http:', 'https:'), poster: `https:${vid.PreviewImage.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: vid.Width, height: vid.Height, type: vid.VideoPurpose.toLowerCase() })), 'type') : {},
       };
 
       if (g.gold_deal) {
