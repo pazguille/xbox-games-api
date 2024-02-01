@@ -1,5 +1,5 @@
 const axios = require('axios');
-const fetchGamesDetail = require('./fetch-games-detail');
+// const fetchGamesDetail = require('./fetch-games-detail');
 
 // const API_URL = 'https://www.microsoft.com/msstoreapiprod/api/autosuggest';
 
@@ -9,7 +9,7 @@ function fetchSearchGames(query, store, lang) {
     .then(html => JSON.parse(
         html.split('<script>window.__Search__=')[1].split('</script>')[0]
     ).shopDepartmentProducts.cards.products.map(g => g.productId))
-    .then((games) => fetchGamesDetail(games, store, lang))
+    // .then((games) => fetchGamesDetail(games, store, lang))
     .catch(err => { return { error: err }; });
 
 
