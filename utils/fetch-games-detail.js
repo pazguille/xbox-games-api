@@ -46,6 +46,7 @@ async function fetchGamesDetail(ids, store, lang) {
     );
 
     const games = gamesResponse.map(game => {
+      // const xpa = game.DisplaySkuAvailabilities[0].Sku.Properties.XboxXPA ? ['Xbox Play Anywhere'] : [];
       const genCompatible = game.Properties.XboxConsoleGenCompatible?.map(g => allowedPlatformsNames[g]) || [];
       const allowedPlatforms = game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.ClientConditions.AllowedPlatforms
         .map(g => g.PlatformName).reduce((a, b) => {
@@ -80,14 +81,21 @@ async function fetchGamesDetail(ids, store, lang) {
       const size = game.DisplaySkuAvailabilities[0].Sku.Properties.Packages?.length > 0 && game.DisplaySkuAvailabilities[0].Sku.Properties.Packages !== null
         ? bytesToSize(game.DisplaySkuAvailabilities[0].Sku.Properties.Packages[0]?.MaxDownloadSizeInBytes)
         : undefined;
+
+      const languages = game.DisplaySkuAvailabilities[0].Sku.Properties.Packages?.length > 0 && game.DisplaySkuAvailabilities[0].Sku.Properties.Packages !== null
+        ? game.DisplaySkuAvailabilities[0].Sku.Properties.Packages[0]?.Languages
+        : undefined;
+
       const g = {
         // full: game,
         id: game.ProductId,
         title: game.LocalizedProperties[0].ProductTitle,
+        titleId: game.AlternateIds.find(a => a.IdType === 'XboxTitleId')?.Value,
         developer: game.LocalizedProperties[0].DeveloperName,
         publisher: game.LocalizedProperties[0].PublisherName,
         category: game.Properties.Category,
         platforms: [...genCompatible, ...allowedPlatforms],
+        languages,
         coop,
         multi,
         size,
