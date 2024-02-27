@@ -113,8 +113,10 @@ async function fetchGamesDetail(ids, store, lang) {
           ends: game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.MSRP !== game.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.ListPrice ? game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.EndDate : undefined,
         },
         description: game.LocalizedProperties[0].ProductDescription,
-        images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
-        videos: game.LocalizedProperties[0].Videos ? groupBy(game.LocalizedProperties[0].Videos.map(vid => ({ url: vid.Uri.replace('http:', 'https:'), poster: `https:${vid.PreviewImage.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: vid.Width, height: vid.Height, type: vid.VideoPurpose.toLowerCase() })), 'type') : {},
+        // images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https:${img.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
+        // videos: game.LocalizedProperties[0].Videos ? groupBy(game.LocalizedProperties[0].Videos.map(vid => ({ url: vid.Uri.replace('http:', 'https:'), poster: `https:${vid.PreviewImage.Uri.replace('store-images.s-microsoft.com', 'api.xstoregames.com/api')}`, width: vid.Width, height: vid.Height, type: vid.VideoPurpose.toLowerCase() })), 'type') : {},
+        images: groupBy(game.LocalizedProperties[0].Images.map(img => ({ url: `https://images.weserv.nl/?output=webp&url=https:${img.Uri}`, width: img.Width, height: img.Height, type: img.ImagePurpose.toLowerCase() })), 'type'),
+        videos: game.LocalizedProperties[0].Videos ? groupBy(game.LocalizedProperties[0].Videos.map(vid => ({ url: vid.Uri.replace('http:', 'https:'), poster: `https://images.weserv.nl/?output=webp&url=https:${vid.PreviewImage.Uri}`, width: vid.Width, height: vid.Height, type: vid.VideoPurpose.toLowerCase() })), 'type') : {},
       };
 
       if (g.gold_deal) {
