@@ -12,6 +12,7 @@ const hpp = require('hpp');
 /**
  * API controllers
  */
+const catalog = require('./api/catalog');
 const games = require('./api/games');
 const gamepass = require('./api/gamepass');
 const search = require('./api/search');
@@ -58,6 +59,7 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 /**
  * API router
  */
+app.get('/api/catalog', catalog);
 app.get('/api/games', games);
 app.get('/api/gamepass', gamepass);
 app.get('/api/search', search);
