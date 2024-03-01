@@ -1,15 +1,15 @@
 const axios = require('axios');
-const getAnonToken = require('./get-anon-token');
+// const getAnonToken = require('./get-anon-token');
 const fetchGamesDetail = require('./fetch-games-detail');
 
 async function fetchProductDetails(id, store, lang) {
-  const token = await getAnonToken(lang, store);
+  // const token = await getAnonToken(lang, store);
 
   return axios.get(`https://emerald.xboxservices.com/xboxcomfd/productDetails/${id}?locale=${lang}-${store}&enableFullDetail=true`, {
     headers: {
       'ms-cv': '74MfNOYt08eu9y3zHzzlGm.10',
       'x-ms-api-version': '2.0',
-      'x-s2s-authorization': `Bearer ${token}`,
+      // 'x-s2s-authorization': `Bearer ${token}`,
     },
   })
   .then(response => Object.values(response.data.channels).reduce((next, val) => ({ ...next, [val.channelKey]: val.products.map(c => c.productId) }), {}))

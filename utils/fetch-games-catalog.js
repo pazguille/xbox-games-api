@@ -1,5 +1,5 @@
 const axios = require('axios');
-const getAnonToken = require('./get-anon-token');
+// const getAnonToken = require('./get-anon-token');
 const fetchGamesDetail = require('./fetch-games-detail');
 
 const filters = {
@@ -25,7 +25,7 @@ const filters = {
 };
 
 async function fetchGamesCatalog(store, lang, list, encodedCT) {
-  const token = await getAnonToken(lang, store);
+  // const token = await getAnonToken(lang, store);
 
   return axios.post(`https://emerald.xboxservices.com/xboxcomfd/browse`,
     {
@@ -39,7 +39,7 @@ async function fetchGamesCatalog(store, lang, list, encodedCT) {
         'content-type': 'application/json',
         'ms-cv': '74MfNOYt08eu9y3zHzzlGm.10',
         'x-ms-api-version': '1.1',
-        'x-s2s-authorization': `Bearer ${token}`,
+        // 'x-s2s-authorization': `Bearer ${token}`,
       },
       params: {
         locale: `${lang}-${store}`,
