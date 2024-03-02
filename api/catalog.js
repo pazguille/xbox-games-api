@@ -6,6 +6,7 @@ const schema = Joi.object({
   list: Joi.string().valid(
     ...Object.keys(filters)
   ).default('all'),
+  sort: Joi.string().valid('az', 'za').default(''),
   lang: Joi.string().default('es'),
   store: Joi.string().default('AR'),
 });
@@ -21,10 +22,9 @@ module.exports = async (req, res) => {
     })));
   }
   try {
-    const results = await fetchGamesCatalog(query.store, query.lang, query.list, query.encodedCT);
+    const results = await fetchGamesCatalog(query.store, query.lang, (query.list + query.sort), query.encodedCT);
     return res.status(results.code || 200).json(results);
   } catch (err) {
-    console.log(err);
     return res.status(500).json(err);
   }
 }
