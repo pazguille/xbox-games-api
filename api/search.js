@@ -19,6 +19,9 @@ module.exports = async (req, res) => {
 
   try {
     const results = await fetchSearchGames(query.q, query.store, query.lang);
+    if (results.error) {
+      return res.status(400).json(results.error);
+    }
     res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=7200, stale-while-revalidate');
     return res.status(200).json(results);
   } catch {
