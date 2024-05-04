@@ -4,6 +4,7 @@ const schema = Joi.object({
   q: Joi.string().required(),
   lang: Joi.string().default('es'),
   store: Joi.string().default('ar'),
+  encodedCT: Joi.string(),
 });
 
 module.exports = async (req, res) => {
@@ -18,7 +19,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const results = await fetchSearchGames(query.q, query.store, query.lang);
+    const results = await fetchSearchGames(query.q, query.store, query.lang, query.encodedCT);
     if (results.error) {
       return res.status(400).json(results.error);
     }
