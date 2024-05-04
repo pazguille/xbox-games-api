@@ -1,16 +1,51 @@
 const axios = require('axios');
-// const fetchGamesDetail = require('./fetch-games-detail');
+function fetchSearchGames(query, store, lang, encodedCT) {
 
-// const API_URL = 'https://www.microsoft.com/msstoreapiprod/api/autosuggest';
+  return axios.post(`https://emerald.xboxservices.com/xboxcomfd/search/games`,
+    {
+      ReturnFilters: false,
+      Filters: 'e30=',
+      ChannelKeyToBeUsedInResponse: 'RESULTS',
+      EncodedCT: encodedCT || undefined,
+      Query: query,
+    },
+    {
+      headers: {
+        'content-type': 'application/json',
+        'ms-cv': '74MfNOYt08eu9y3zHzzlGm.10',
+        'x-ms-api-version': '1.1',
+      },
+      params: {
+        locale: `${lang}-${store}`,
+      },
+    },
+  )
+  .then(response => {
+    const ids = response.data.channels.RESULTS.products.map(game => game.productId);
+    return {
+      encodedCT: response.data.channels.RESULTS.encodedCT,
+      total: response.data.channels.RESULTS.totalItems,
+      ids: ids,
+    };
+  })
+  .catch(err => { return { error: err }; });
 
-function fetchSearchGames(query, store, lang) {
-  return axios.get(`https://www.microsoft.com/${lang}-${store}/search/shop/games?q=${query}&skip=0`)
-    .then(response => response.data)
-    .then(html => JSON.parse(
-        html.split('<script>window.__Search__=')[1].split('</script>')[0]
-    ).shopDepartmentProducts.cards.products.map(g => g.productId))
-    // .then((games) => fetchGamesDetail(games, store, lang))
-    .catch(err => { return { error: err }; });
+  // return axios.get(`https://www.xbox.com/${lang}-${store}/Search/Results?q=${query}`)
+  //   .then(response => response.data)
+  //   .then(html => Object.keys(
+  //     JSON.parse(
+  //       html.split('window.__PRELOADED_STATE__ = ')[1].split(';\n')[0]
+  //     ).core2.products.productSummaries
+  //   ))
+  //   .catch(err => { return { error: err }; });
+
+  // return axios.get(`https://www.microsoft.com/${lang}-${store}/search/shop/games?q=${query}&skip=0`)
+  //   .then(response => response.data)
+  //   .then(html => JSON.parse(
+  //       html.split('<script>window.__Search__=')[1].split('</script>')[0]
+  //   ).shopDepartmentProducts.cards.products.map(g => g.productId))
+  //   // .then((games) => fetchGamesDetail(games, store, lang))
+  //   .catch(err => { return { error: err }; });
 
 
   // return axios.get(`${API_URL}`, {
