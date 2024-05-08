@@ -21,14 +21,14 @@
   "dependencies": {
     "@vercel/edge": "^1.1.1",
     "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "compression": "^1.7.4",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
     "hpp": "^0.2.3",
     "joi": "^17.9.2",
     "mongodb": "^6.3.0",
-    "sharp": "^0.33.1",
-    "xml2js": "^0.6.2"
+    "sharp": "^0.33.1"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.5.0",
