@@ -2,7 +2,7 @@ const axios = require('axios');
 const fetchGamesDetail = require('./fetch-games-detail');
 
 const API_URL = 'https://reco-public.rec.mp.microsoft.com/channels/Reco/V8.0/Lists';
-const GP_DEALS_URL = (store, lang) => `https://www.xbox.com/${lang}-${store}/xbox-game-pass/deals/JS/dwg-globalContent.json`;
+const GP_DEALS_URL = (store, lang) => `https://www.xbox.com/${lang}-${store}/xbox-game-pass/deals/JS/deals-bigids.js`;
 
 const lists = {
   new: 'Computed/New',
@@ -30,13 +30,8 @@ function fetchFromGPDeals(store, lang) {
   return axios.get(GP_DEALS_URL(store, lang))
   .then(response => response.data)
   .then(response => {
-    const data = JSON.parse(response.replace('globalContent = ', '')).locales['es-ar'];
-    const filtered = [];
-    for (key in data) {
-      if (key.includes('keyX1gamebigid')) {
-        filtered.push({ Id: data[key]});
-      }
-    }
+    const data = JSON.parse(response.replace('fullGameArray = ', '').replace(';', ''));
+    const filtered = data.map(item => ({ Id: item }));
     return filtered;
   })
   .catch(err => { throw { error: err.response.data.error }; });
