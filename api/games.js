@@ -5,7 +5,7 @@ const fetchGamesRelated = require('../utils/fetch-games-related');
 const fetchGamesReviews = require('../utils/fetch-games-reviews');
 
 const schema = Joi.object({
-  list: Joi.string().valid('new', 'deals', 'coming', 'best', 'most', 'free', 'gp-deals'),
+  list: Joi.string().valid('new', 'deals', 'coming', 'best', 'most', 'free', 'gp-deals', 'careful'),
   id: Joi.string(),
   related: Joi.string(),
   reviews: Joi.string(),

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const fetchGamesDetail = require('./fetch-games-detail');
-
+const Collections = require('../services/collections');
 const API_URL = 'https://reco-public.rec.mp.microsoft.com/channels/Reco/V8.0/Lists';
 const GP_DEALS_URL = (store, lang) => `https://www.xbox.com/${lang}-${store}/xbox-game-pass/deals/JS/deals-bigids.js`;
 
@@ -37,10 +37,21 @@ function fetchFromGPDeals(store, lang) {
   .catch(err => { throw { error: err.response.data.error }; });
 };
 
+async function fetchCarefulList(count, skipitems) {
+  const carefulList = await Collections.find({
+    type: 'careful',
+    count,
+    skipitems,
+  });
+  return carefulList.ids.map(item => ({ Id: item }));
+};
+
 async function fetchGamesList(list, count, skipitems, store, lang) {
   let result = [];
   if (list === 'gp-deals') {
     result = await fetchFromGPDeals(store, lang);
+  } else if (list === 'careful') {
+    result = await fetchCarefulList(count, skipitems);
   } else {
     result = await fetchListFromMS(list, count, skipitems, store, lang);
   }
