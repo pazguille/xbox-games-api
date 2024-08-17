@@ -4,12 +4,16 @@ const fetchGamesDetail = require('./fetch-games-detail');
 
 const filters = {
   all: 'e30=',
-  'allaz': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
-  'allza': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
+  allaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
+  allza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
 
   pc: 'eyJQbGF5V2l0aCI6eyJpZCI6IlBsYXlXaXRoIiwiY2hvaWNlcyI6W3siaWQiOiJQQyJ9LHsiaWQiOiJYYm94UGxheUFueXdoZXJlIn1dfX0=',
-  'pcaz': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfSwiUGxheVdpdGgiOnsiaWQiOiJQbGF5V2l0aCIsImNob2ljZXMiOlt7ImlkIjoiUEMifV19fQ==',
-  'pcza': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX0sIlBsYXlXaXRoIjp7ImlkIjoiUGxheVdpdGgiLCJjaG9pY2VzIjpbeyJpZCI6IlBDIn1dfX0=',
+  pcaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfSwiUGxheVdpdGgiOnsiaWQiOiJQbGF5V2l0aCIsImNob2ljZXMiOlt7ImlkIjoiUEMifSx7ImlkIjoiWGJveFBsYXlBbnl3aGVyZSJ9XX19',
+  pcza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX0sIlBsYXlXaXRoIjp7ImlkIjoiUGxheVdpdGgiLCJjaG9pY2VzIjpbeyJpZCI6IlBDIn0seyJpZCI6Ilhib3hQbGF5QW55d2hlcmUifV19fQ==',
+
+  // pc: 'eyJQbGF5V2l0aCI6eyJpZCI6IlBsYXlXaXRoIiwiY2hvaWNlcyI6W3siaWQiOiJQQyJ9LHsiaWQiOiJYYm94UGxheUFueXdoZXJlIn1dfX0=',
+  // 'pcaz': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfSwiUGxheVdpdGgiOnsiaWQiOiJQbGF5V2l0aCIsImNob2ljZXMiOlt7ImlkIjoiUEMifV19fQ==',
+  // 'pcza': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX0sIlBsYXlXaXRoIjp7ImlkIjoiUGxheVdpdGgiLCJjaG9pY2VzIjpbeyJpZCI6IlBDIn1dfX0=',
 
   action_adventure: 'eyJHZW5yZSI6eyJpZCI6IkdlbnJlIiwiY2hvaWNlcyI6W3siaWQiOiJBY3Rpb24gJiBhZHZlbnR1cmUifV19fQ==',
   action_adventureaz: 'eyJHZW5yZSI6eyJpZCI6IkdlbnJlIiwiY2hvaWNlcyI6W3siaWQiOiJBY3Rpb24gJiBhZHZlbnR1cmUifV19LCJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
