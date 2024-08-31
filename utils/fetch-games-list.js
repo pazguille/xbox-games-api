@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fetchGamesDetail = require('./fetch-games-detail');
 const Collections = require('../services/collections');
+const Games = require('../services/games');
 const API_URL = 'https://reco-public.rec.mp.microsoft.com/channels/Reco/V8.0/Lists';
 const GP_DEALS_URL = (store, lang) => `https://www.xbox.com/${lang}-${store}/xbox-game-pass/deals/JS/deals-bigids.js`;
 
@@ -46,12 +47,33 @@ async function fetchCarefulList(count, skipitems) {
   return carefulList.ids.map(item => ({ Id: item }));
 };
 
+
+async function fetchPCList(list, count, skipitems, store, lang) {
+  const page = (skipitems + count) / count;
+  const listName = list === 'deals-pc' ? 'Deal' : 'NewAndRising';
+  return axios.get(`https://apps.microsoft.com/api/Reco/GetComputedProductsList?gl=${store}&hl=${lang}-${store}&listName=${listName}&pgNo=${page}&noItems=${count}&filteredCategories=AllProducts&mediaType=games`)
+  .then(response => response.data)
+  .then(response => {
+    return response.productsList.map(({ productId }) => ({ Id: productId }));
+  })
+  .catch(err => { throw { error: err.response.data.error }; });
+}
+
+async function fetchRandomList(count) {
+  const randomList = await Games.random({ count });
+  return randomList.map(({ id }) => ({ Id: id }));
+};
+
 async function fetchGamesList(list, count, skipitems, store, lang) {
   let result = [];
   if (list === 'gp-deals') {
     result = await fetchFromGPDeals(store, lang);
   } else if (list === 'careful') {
     result = await fetchCarefulList(count, skipitems);
+  } else if (list === 'random') {
+    result = await fetchRandomList(count);
+  } else if (['deals-pc', 'new-pc'].includes(list)) {
+    result = await fetchPCList(list, count, skipitems, store, lang);
   } else {
     result = await fetchListFromMS(list, count, skipitems, store, lang);
   }
