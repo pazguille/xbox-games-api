@@ -9,7 +9,7 @@ const schema = Joi.object({
   id: Joi.string(),
   related: Joi.string(),
   reviews: Joi.string(),
-  skipitems: Joi.number().default(0),
+  skipitems: Joi.string().default(0),
   count: Joi.number().default(10),
   lang: Joi.string().default('es'),
   store: Joi.string().default('ar'),
