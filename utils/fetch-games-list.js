@@ -23,19 +23,19 @@ function fetchListFromMS(list, count, skipitems, store, lang) {
     count,
     skipitems,
   }})
-  .then(response => response.data.Items)
-  .catch(err => { throw { error: err.response.data.error }; });
+    .then(response => response.data.Items)
+    .catch(err => { throw { error: err.response.data.error }; });
 };
 
 function fetchFromGPDeals(store, lang) {
   return axios.get(GP_DEALS_URL(store, lang))
-  .then(response => response.data)
-  .then(response => {
-    const data = JSON.parse(response.replace('fullGameArray = ', '').replace(';', ''));
-    const filtered = data.map(item => ({ Id: item }));
-    return filtered;
-  })
-  .catch(err => { throw { error: err.response.data.error }; });
+    .then(response => response.data)
+    .then(response => {
+      const data = JSON.parse(response.replace('fullGameArray = ', '').replace(';', ''));
+      const filtered = data.map(item => ({ Id: item }));
+      return filtered;
+    })
+    .catch(err => { throw { error: err.response.data.error }; });
 };
 
 async function fetchCarefulList(count, skipitems) {
@@ -47,6 +47,32 @@ async function fetchCarefulList(count, skipitems) {
   return carefulList.ids.map(item => ({ Id: item }));
 };
 
+async function fetchNewList(count, skipitems) {
+  const newList = await Collections.find({
+    type: 'new',
+    count,
+    skipitems: Number(skipitems),
+  });
+  return newList.ids.map(item => ({ Id: item }));
+};
+
+async function fetchComingList(count, skipitems) {
+  const comingList = await Collections.find({
+    type: 'coming',
+    count,
+    skipitems: Number(skipitems),
+  });
+  return comingList.ids.map(item => ({ Id: item }));
+};
+
+async function fetchDealsList(count, skipitems) {
+  const dealsList = await Collections.find({
+    type: 'deals',
+    count,
+    skipitems: Number(skipitems),
+  });
+  return dealsList.ids.map(item => ({ Id: item }));
+};
 
 async function fetchPCList(list, count, skipitems, store, lang) {
   const page = (skipitems + count) / count;
@@ -72,6 +98,12 @@ async function fetchGamesList(list, count, skipitems, store, lang) {
     result = await fetchCarefulList(count, skipitems);
   } else if (list === 'random') {
     result = await fetchRandomList(count);
+  } else if (list === 'coming') {
+    result = await fetchComingList(count, skipitems);
+  } else if (list === 'new') {
+    result = await fetchNewList(count, skipitems);
+  } else if (list === 'deals') {
+    result = await fetchDealsList(count, skipitems);
   } else if (['deals-pc', 'new-pc'].includes(list)) {
     result = await fetchPCList(list, count, skipitems, store, lang);
   } else {
