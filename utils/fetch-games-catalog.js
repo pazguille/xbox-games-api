@@ -1,5 +1,4 @@
 const axios = require('axios');
-// const getAnonToken = require('./get-anon-token');
 const fetchGamesDetail = require('./fetch-games-detail');
 
 const filters = {
@@ -7,13 +6,21 @@ const filters = {
   allaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
   allza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
 
+  dealsall: 'e30=',
+  dealsaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
+  dealsza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
+
+  newall: 'e30=',
+  newaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
+  newza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
+
+  toppaidall: 'e30=',
+  toppaidaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
+  toppaidza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
+
   pc: 'eyJQbGF5V2l0aCI6eyJpZCI6IlBsYXlXaXRoIiwiY2hvaWNlcyI6W3siaWQiOiJQQyJ9LHsiaWQiOiJYYm94UGxheUFueXdoZXJlIn1dfX0=',
   pcaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfSwiUGxheVdpdGgiOnsiaWQiOiJQbGF5V2l0aCIsImNob2ljZXMiOlt7ImlkIjoiUEMifSx7ImlkIjoiWGJveFBsYXlBbnl3aGVyZSJ9XX19',
   pcza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX0sIlBsYXlXaXRoIjp7ImlkIjoiUGxheVdpdGgiLCJjaG9pY2VzIjpbeyJpZCI6IlBDIn0seyJpZCI6Ilhib3hQbGF5QW55d2hlcmUifV19fQ==',
-
-  // pc: 'eyJQbGF5V2l0aCI6eyJpZCI6IlBsYXlXaXRoIiwiY2hvaWNlcyI6W3siaWQiOiJQQyJ9LHsiaWQiOiJYYm94UGxheUFueXdoZXJlIn1dfX0=',
-  // 'pcaz': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfSwiUGxheVdpdGgiOnsiaWQiOiJQbGF5V2l0aCIsImNob2ljZXMiOlt7ImlkIjoiUEMifV19fQ==',
-  // 'pcza': 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX0sIlBsYXlXaXRoIjp7ImlkIjoiUGxheVdpdGgiLCJjaG9pY2VzIjpbeyJpZCI6IlBDIn1dfX0=',
 
   action_adventure: 'eyJHZW5yZSI6eyJpZCI6IkdlbnJlIiwiY2hvaWNlcyI6W3siaWQiOiJBY3Rpb24gJiBhZHZlbnR1cmUifV19fQ==',
   action_adventureaz: 'eyJHZW5yZSI6eyJpZCI6IkdlbnJlIiwiY2hvaWNlcyI6W3siaWQiOiJBY3Rpb24gJiBhZHZlbnR1cmUifV19LCJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
@@ -72,13 +79,18 @@ const filters = {
   family_kidsza: 'eyJHZW5yZSI6eyJpZCI6IkdlbnJlIiwiY2hvaWNlcyI6W3siaWQiOiJGYW1pbHkgJiBraWRzIn1dfSwib3JkZXJieSI6eyJpZCI6Im9yZGVyYnkiLCJjaG9pY2VzIjpbeyJpZCI6IlRpdGxlIERlc2MifV19fQ==',
 };
 
-async function fetchGamesCatalog(store, lang, list, encodedCT) {
-  // const token = await getAnonToken(lang, store);
+const channels = {
+  new: 'great-new-games',
+  deals: 'DynamicChannel.GameDeals',
+  toppaid: 'DynamicChannel.TopPaidGames',
+};
 
+async function fetchGamesCatalog(store, lang, list, encodedCT) {
   return axios.post(`https://emerald.xboxservices.com/xboxcomfd/browse`,
     {
+      ChannelId: channels[list],
       ReturnFilters: false,
-      Filters: filters[list],
+      Filters: filters[list] || filters.all,
       ChannelKeyToBeUsedInResponse: 'GAMES',
       EncodedCT: encodedCT || undefined,
     },
@@ -87,7 +99,6 @@ async function fetchGamesCatalog(store, lang, list, encodedCT) {
         'content-type': 'application/json',
         'ms-cv': '74MfNOYt08eu9y3zHzzlGm.10',
         'x-ms-api-version': '1.1',
-        // 'x-s2s-authorization': `Bearer ${token}`,
       },
       params: {
         locale: `${lang}-${store}`,
@@ -99,7 +110,6 @@ async function fetchGamesCatalog(store, lang, list, encodedCT) {
     return {
       encodedCT: response.data.channels.GAMES.encodedCT,
       total: response.data.channels.GAMES.totalItems,
-      // ids: ids.length,
       ids: ids,
       games: await fetchGamesDetail(ids, store, lang),
     };
@@ -108,4 +118,5 @@ async function fetchGamesCatalog(store, lang, list, encodedCT) {
 };
 
 exports.fetchGamesCatalog = fetchGamesCatalog;
-exports.filters = filters
+exports.filters = filters;
+exports.channels = channels;

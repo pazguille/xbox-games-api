@@ -55,7 +55,6 @@ module.exports = async (req, res) => {
 
     const $ = cheerio.load(html);
     const news = Array.from($('.fwpl-col')).map(n => {
-      console.log();
       return {
         title: $(n).find('.h2 a').text(),
         image: $(n).find('img').attr('src'),
