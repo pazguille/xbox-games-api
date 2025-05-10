@@ -5,14 +5,18 @@ async function connectToGames() {
   return await db.collection('games');
 }
 
-async function find(query) {
-  //  {title: {$regex: 'Kena', $options: 'i'}}
-  const q = query ? { id: { $in: query.ids } } : {};
+async function find(query, options) {
+  // {title: {$regex: 'Kena', $options: 'i'}}
+  // {title: {$regex: 'Far.*Cry.*6', $options: 'i}}
+  // {"$or": [{"title": {"$regex": "dragones", "$options": "i"}}, {"description": {"$regex": "dragones", "$options": "i"}}]}
+  const q = query;
+  const o = options || {};
+
+  // const q = query ? { id: { $in: query.ids } } : {};
   const games = await connectToGames();
   return await games
-    .find(q)
+    .find(q, o)
     .hint( { $natural : 1 } )
-    .project({ _id: 0 })
     .toArray();
 }
 
