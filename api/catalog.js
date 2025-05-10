@@ -1,10 +1,11 @@
 const Joi = require('joi');
-const { filters, fetchGamesCatalog } = require('../utils/fetch-games-catalog');
+const { filters, channels, fetchGamesCatalog } = require('../utils/fetch-games-catalog');
 
 const schema = Joi.object({
   encodedCT: Joi.string(),
   list: Joi.string().valid(
-    ...Object.keys(filters)
+    ...Object.keys(filters),
+    ...Object.keys(channels),
   ).default('all'),
   sort: Joi.string().valid('az', 'za').default(''),
   lang: Joi.string().default('es'),

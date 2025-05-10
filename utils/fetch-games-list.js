@@ -42,7 +42,7 @@ async function fetchCarefulList(count, skipitems) {
   const carefulList = await Collections.find({
     type: 'careful',
     count,
-    skipitems,
+    skipitems: Number(skipitems),
   });
   return carefulList.ids.map(item => ({ Id: item }));
 };
