@@ -93,7 +93,7 @@ async function fetchRandomList(count) {
 async function fetchNextWeeksList(count, skipitems) {
   const formatDate = (date) => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
@@ -129,6 +129,45 @@ async function fetchNextWeeksList(count, skipitems) {
   return list.map(({ id }) => ({ Id: id }));
 };
 
+async function fetchPastWeeksList(count, skipitems) {
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+
+  const upcomingMonday = new Date(today);
+
+  if (dayOfWeek === 0) { // Sunday (weekend)
+    upcomingMonday.setDate(today.getDate() + 1);
+  } else if (dayOfWeek === 6) { // Saturday (weekend)
+    upcomingMonday.setDate(today.getDate() + 2);
+  } else { // Weekday
+    upcomingMonday.setDate(today.getDate() - (dayOfWeek - 1));
+  }
+
+  const twoWeeksPriorMonday = new Date(upcomingMonday);
+  twoWeeksPriorMonday.setDate(upcomingMonday.getDate() - 14);
+  const startDateQuery = formatDate(twoWeeksPriorMonday);
+  const endDateQuery = formatDate(upcomingMonday);
+
+  const list = await Games.find(
+    { release_date: { $gt: startDateQuery, $lte: endDateQuery } },
+    {
+      projection: { _id: 0 },
+      sort: { release_date: 1, title: 1 },
+      skip: Number(skipitems),
+      limit: count,
+    },
+  );
+
+  return list.map(({ id }) => ({ Id: id }));
+};
+
 async function fetchGamesList(list, count, skipitems, store, lang) {
   let result = [];
   if (list === 'gp-deals') {
@@ -147,6 +186,8 @@ async function fetchGamesList(list, count, skipitems, store, lang) {
     result = await fetchPCList(list, count, skipitems, store, lang);
   } else if (list === 'nextweeks') {
     result = await fetchNextWeeksList(count, skipitems);
+  } else if (list === 'pastweeks') {
+    result = await fetchPastWeeksList(count, skipitems);
   } else {
     result = await fetchListFromMS(list, count, skipitems, store, lang);
   }
