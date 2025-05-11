@@ -159,7 +159,7 @@ async function fetchPastWeeksList(count, skipitems) {
     { release_date: { $gt: startDateQuery, $lte: endDateQuery } },
     {
       projection: { _id: 0 },
-      sort: { release_date: 1, title: 1 },
+      sort: { release_date: -1, title: 1 },
       skip: Number(skipitems),
       limit: count,
     },
