@@ -75,7 +75,7 @@ async function fetchDealsList(count, skipitems) {
 };
 
 async function fetchPCList(list, count, skipitems, store, lang) {
-  const page = (skipitems + count) / count;
+  const page = (Number(skipitems) + count) / count;
   const listName = list === 'deals-pc' ? 'Deal' : 'NewAndRising';
   return axios.get(`https://apps.microsoft.com/api/Reco/GetComputedProductsList?gl=${store}&hl=${lang}-${store}&listName=${listName}&pgNo=${page}&noItems=${count}&filteredCategories=AllProducts&mediaType=games`)
   .then(response => response.data)
