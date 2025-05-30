@@ -76,13 +76,16 @@ async function fetchDealsList(count, skipitems) {
 
 async function fetchPCList(list, count, skipitems, store, lang) {
   const page = (Number(skipitems) + count) / count;
-  const listName = list === 'deals-pc' ? 'Deal' : 'NewAndRising';
-  return axios.get(`https://apps.microsoft.com/api/Reco/GetComputedProductsList?gl=${store}&hl=${lang}-${store}&listName=${listName}&pgNo=${page}&noItems=${count}&filteredCategories=AllProducts&mediaType=games`)
-  .then(response => response.data)
-  .then(response => {
-    return response.productsList.map(({ productId }) => ({ Id: productId }));
-  })
-  .catch(err => { throw { error: err.response.data.error }; });
+  const listUrl = list === 'deals-pc'
+    ? `https://apps.microsoft.com/api/Reco/GetComputedProductsList?gl=${store}&hl=${lang}-${store}&listName=Deal&pgNo=${page}&noItems=${count}&filteredCategories=AllProducts&mediaType=games`
+    : `https://apps.microsoft.com/api/Reco/GetMerchandiserContentProductList?gl=${store}&hl=${lang}-${store}&collectionName=MerchandiserContent/Games/Primary/NewAndNotablePCGames/_NewAndNotablePCGames&pgNo=${page}&noItems=${count}&filteredCategories=AllProducts&mediaType=games`;
+
+  return axios.get(listUrl)
+    .then(response => response.data)
+    .then(response => {
+      return response.productsList.map(({ productId }) => ({ Id: productId }));
+    })
+    .catch(err => { throw { error: err.response.data.error }; });
 }
 
 async function fetchRandomList(count) {
