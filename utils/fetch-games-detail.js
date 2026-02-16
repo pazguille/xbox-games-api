@@ -46,7 +46,22 @@ async function fetchGamesDetail(ids, store, lang) {
     );
 
     const games = gamesResponse.map(game => {
-      // const xpa = game.DisplaySkuAvailabilities[0].Sku.Properties.XboxXPA ? ['Xbox Play Anywhere'] : [];
+      // Xbox Play Anywhere (XPA)
+      const xpa = game.Properties.Attributes?.some(attr => attr.Name === 'XPA') || game.DisplaySkuAvailabilities[0].Sku.Properties.XboxXPA;
+
+      // Cloud (Mobile-only availability)
+      const hasCloudAvailability = game.DisplaySkuAvailabilities.some(sku =>
+        sku.Availabilities.some(av => {
+          const platforms = av.Conditions.ClientConditions.AllowedPlatforms.map(p => p.PlatformName);
+          return platforms.includes('Windows.Mobile');
+        })
+      );
+      const cloud = hasCloudAvailability ? ['Cloud'] : [];
+
+      // Handheld (XPA + Cloud Saves)
+      const hasCloudSaves = game.Properties.Attributes?.some(attr => attr.Name === 'XblCloudSaves');
+      const handheld = (xpa && hasCloudSaves) ? ['Handheld'] : [];
+
       const genCompatible = game.Properties.XboxConsoleGenCompatible?.map(g => allowedPlatformsNames[g]) || [];
       const allowedPlatforms = game.DisplaySkuAvailabilities[0].Availabilities[0].Conditions.ClientConditions.AllowedPlatforms
         .map(g => g.PlatformName).reduce((a, b) => {
@@ -55,6 +70,9 @@ async function fetchGamesDetail(ids, store, lang) {
           }
           return a;
         }, []);
+
+      allowedPlatforms.push(...cloud);
+      allowedPlatforms.push(...handheld);
 
       const coop = game.Properties.Attributes?.reduce((a, b) => {
         if (['XblLocalCoop', 'XblOnlineCoop'].includes(b.Name)) {
@@ -95,6 +113,7 @@ async function fetchGamesDetail(ids, store, lang) {
         publisher: game.LocalizedProperties[0].PublisherName,
         category: game.Properties.Category,
         platforms: [...genCompatible, ...allowedPlatforms],
+        xpa: xpa,
         languages,
         coop,
         multi,
