@@ -49,14 +49,13 @@ async function fetchGamesDetail(ids, store, lang) {
       // Xbox Play Anywhere (XPA)
       const xpa = game.Properties.Attributes?.some(attr => attr.Name === 'XPA') || game.DisplaySkuAvailabilities[0].Sku.Properties.XboxXPA;
 
-      // Cloud (Mobile-only availability)
-      const hasCloudAvailability = game.DisplaySkuAvailabilities.some(sku =>
-        sku.Availabilities.some(av => {
-          const platforms = av.Conditions.ClientConditions.AllowedPlatforms.map(p => p.PlatformName);
-          return platforms.includes('Windows.Mobile');
-        })
-      );
-      const cloud = hasCloudAvailability ? ['Cloud'] : [];
+      // // Cloud (Mobile-only availability)
+      // const hasCloudAvailability = game.DisplaySkuAvailabilities.map(sku =>
+      //   sku.Availabilities.filter(av => {
+      //     console.log(av.Actions.length === 1 && av.Actions[0] === 'License');
+      //     return !(av.Actions.length === 1 && av.Actions[0] === 'License');
+      //   })
+      // );
 
       // Handheld (XPA + Cloud Saves)
       const hasCloudSaves = game.Properties.Attributes?.some(attr => attr.Name === 'XblCloudSaves');
@@ -71,7 +70,7 @@ async function fetchGamesDetail(ids, store, lang) {
           return a;
         }, []);
 
-      allowedPlatforms.push(...cloud);
+      // allowedPlatforms.push(...cloud);
       allowedPlatforms.push(...handheld);
 
       const coop = game.Properties.Attributes?.reduce((a, b) => {
