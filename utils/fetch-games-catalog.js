@@ -10,6 +10,8 @@ const filters = {
   dealsaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
   dealsza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
 
+  mostpopular: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiTW9zdFBvcHVsYXIgZGVzYyJ9XX19',
+
   newall: 'e30=',
   newaz: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgQXNjIn1dfX0=',
   newza: 'eyJvcmRlcmJ5Ijp7ImlkIjoib3JkZXJieSIsImNob2ljZXMiOlt7ImlkIjoiVGl0bGUgRGVzYyJ9XX19',
